@@ -83,29 +83,15 @@ function titleDate(){
     $("#currentDay").text(titleDate);
 }
 
-//Loading title date
-
+//Header date
 titleDate();
 
-//Gets localStorage data
-
-function showStorage(){
-    var recordedDay = JSON.parse(localStorage.getItem("dayArray"));
-
-    if(recordedDay){
-        dayArray = recordedDay;
-    }
-
-    saveEvents();
-    displayEvents();
-
-}
 
 //Added elements in the body, loup
 
-dayArray.forEach(function(hourBody)
+dayArray.forEach(function(hourBody){
 
-{// timeblock rows
+// timeblock rows
 
     var timeRow = $("<form>").attr({
         "class": "row"
@@ -118,7 +104,37 @@ dayArray.forEach(function(hourBody)
     var hourSquare = $("<div>").text(`${hourBody.hour}${hourBody.meridiem}`).attr({
         "class": "col-md-1 hour"
     });
-    timeRow.append(hourSquare);
-});
-
     
+
+
+//Textarea
+
+var textArea = $("<div>").attr({"class": "col-md-8 description p-0"});
+var event = $("<textarea>");
+textArea.append(event);
+event.attr("index", hourBody.index);
+
+if(hourBody.time < moment().format("HH")){
+    event.attr({
+        "class": "past"
+    });
+}else if(hourBody === moment().format("HH")){
+    event.attr({
+        "class": "present"
+    });
+}else if (hourBody > moment().format("HH")){
+    event.attr({
+        "class": "future"
+    });
+}
+
+//Creates button
+
+var saveBtn = $("<i class='far fa-save fa-lg'></i>");
+var saveEvent = $("<button>").attr({"class": "col-md-1 saveBtn"});
+saveEvent.append(saveBtn);
+
+timeRow.append(hourSquare, textArea, saveEvent);
+
+  
+});
