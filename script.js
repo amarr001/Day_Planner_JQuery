@@ -1,3 +1,5 @@
+// Array to store and loup 
+
 var dayArray = [
     {
         index: "0",
@@ -70,6 +72,53 @@ var dayArray = [
         meridiem: "pm",
         event: ""
 
-    }
+    },
         
 ]
+
+//Function to get the date in the header using moment.js library
+
+function titleDate(){
+    var titleDate = moment().format('dddd, MMMM Do');
+    $("#currentDay").text(titleDate);
+}
+
+//Loading title date
+
+titleDate();
+
+//Gets localStorage data
+
+function showStorage(){
+    var recordedDay = JSON.parse(localStorage.getItem("dayArray"));
+
+    if(recordedDay){
+        dayArray = recordedDay;
+    }
+
+    saveEvents();
+    displayEvents();
+
+}
+
+//Added elements in the body, loup
+
+dayArray.forEach(function(hourBody)
+
+{// timeblock rows
+
+    var timeRow = $("<form>").attr({
+        "class": "row"
+    });
+
+    $(".container").append(timeRow);
+
+// Hour niches
+
+    var hourSquare = $("<div>").text(`${hourBody.hour}${hourBody.meridiem}`).attr({
+        "class": "col-md-1 hour"
+    });
+    timeRow.append(hourSquare);
+});
+
+    
