@@ -1,97 +1,86 @@
-// Array to store and loup 
 
 var dayArray = [
     {
         id: "0",
-        hour: "08",
-        time: "08",
+        hour: "9",
+        time: "09",
         meridiem: "am",
-        reminder: ""
+        textevent: ""
     },
     {
         id: "1",
-        hour: "09",
-        time: "09",
-        meridiem: "am",
-        reminder: ""
-
-    },
-    {
-        id: "2",
         hour: "10",
         time: "10",
         meridiem: "am",
-        reminder: ""
+        textevent: ""
     },
     {
-        id: "3",
+        id: "2",
         hour: "11",
         time: "11",
         meridiem: "am",
-        reminder: ""
+        textevent: ""
     },
     {
-        id: "4",
+        id: "3",
         hour: "12",
         time: "12",
         meridiem: "pm",
-        reminder: ""
+        textevent: ""
     },
     {
-        id: "5",
+        id: "4",
         hour: "1",
         time: "13",
         meridiem: "pm",
-        reminder: ""
+        textevent: ""
     },
     {
-        id: "6",
+        id: "5",
         hour: "2",
         time: "14",
         meridiem: "pm",
-        reminder: ""
+        textevent: ""
     },
     {
-        id: "7",
+        id: "6",
         hour: "3",
         time: "15",
         meridiem: "pm",
-        reminder: ""
+        textevent: ""
     },
     {
-        id: "8",
+        id: "7",
         hour: "4",
         time: "16",
         meridiem: "pm",
-        reminder: ""
+        textevent: ""
     },
     {
-        id: "9",
+        id: "8",
         hour: "5",
         time: "17",
         meridiem: "pm",
-        reminder: ""
-
+        textevent: ""
     },
-        
+    
 ]
 
-//Function to get the date in the header using moment.js library
-
-function titleDate(){
-    var titleDate = moment().format('dddd, MMMM Do');
-    $("#currentDay").text(titleDate);
+// gets data for the header date
+function titleDate() {
+    var currentDate = moment().format('dddd, MMMM Do');
+    $("#currentDay").text(currentDate);
 }
 
-// Saves event to localStorage
+// saves data to localStorage
 function saveEvents() {
     localStorage.setItem("dayArray", JSON.stringify(dayArray));
 }
-// Display data within localStorage
+
+// sets any data in localStorage to the view
 function displayEvents() {
     dayArray.forEach(function (eventDisplay) {
-        $(`#${eventDisplay.id}`).val(eventDisplay.reminder);
-
+        $(`#${eventDisplay.id}`).val(eventDisplay.textevent);
     })
 }
 
@@ -100,7 +89,6 @@ function init() {
     var recordedDay = JSON.parse(localStorage.getItem("dayArray"));
 
     if (recordedDay) {
-
         dayArray = recordedDay;
     }
 
@@ -108,73 +96,67 @@ function init() {
     displayEvents();
 }
 
-//Header date
+// loads header date
 titleDate();
 
-//Added elements in the body, loup
-
-dayArray.forEach(function(hourBody){
-
-// timeblock rows
-
+// creates the visuals for the scheduler body
+dayArray.forEach(function(hourDiv) {
+    // creates timeblocks row
     var timeRow = $("<form>").attr({
         "class": "row"
     });
-
     $(".container").append(timeRow);
 
-// Hour niches
-
-    var hourSquare = $("<div>").text(`${hourBody.hour}${hourBody.meridiem}`).attr({
-        "class": "col-md-1 hour"
+    // creates time field
+    var hourSpot = $("<div>")
+        .text(`${hourDiv.hour}${hourDiv.meridiem}`)
+        .attr({
+            "class": "col-md-2 hour"
     });
-    
 
+    // creates schdeduler data
+    var textDiv = $("<div>")
+        .attr({
+            "class": "col-md-9 description p-0"
+        });
+    var textArea = $("<textarea>");
+    textDiv.append(textArea);
+    textArea.attr("id", hourDiv.id);
+    if (hourDiv.time < moment().format("HH")) {
+        textArea.attr ({
+            "class": "past", 
+        })
+    } else if (hourDiv.time === moment().format("HH")) {
+        textArea.attr({
+            "class": "present"
+        })
+    } else if (hourDiv.time > moment().format("HH")) {
+        textArea.attr({
+            "class": "future"
+        })
+    }
 
-//Textarea
-
-var textAreaDiv = $("<div>").attr({"class": "col-md-8 description p-0"});
-var textArea = $("<textarea>");
-textAreaDiv.append(textArea);
-textArea.attr("id", hourBody.id);
-
-if(hourBody.time < moment().format("HH")){
-    textArea.attr({
-        "class": "past"
-    })
-}else if(hourBody.time === moment().format("HH")){
-    textArea.attr({
-        "class": "present"
-    })
-}else if (hourBody.time > moment().format("HH")){
-    textArea.attr({
-        "class": "future"
-    })
-}
-
-//Creates button
-
-var saveBtn = $("<i class='far fa-save fa-lg'></i>")
-var saveEvent = $("<button>").attr({"class": "col-md-1 saveBtn"});
-
-saveEvent.append(saveBtn);
-timeRow.append(hourSquare, textAreaDiv, saveEvent);
-
+    // creates save button
+    var saveBtn = $("<i class='far fa-save fa-lg'></i>")
+    var saveEvent = $("<button>")
+        .attr({
+            "class": "col-md-1 saveBtn"
+    });
+    saveEvent.append(saveBtn);
+    timeRow.append(hourSpot, textDiv, saveEvent);
 })
 
+// loads any existing localstorage data after components created
 init();
 
-// Saves events into localStorage
 
+// saves data to be used in localStorage
 $(".saveBtn").on("click", function(event) {
     event.preventDefault();
     var saveIndex = $(this).siblings(".description").children(".future").attr("id");
-    dayArray[saveIndex].reminder = $(this).siblings(".description").children(".future").val();
-    
-   console.log(saveIndex);
-  console.log(dayArray[saveIndex].reminder);
-   
+    dayArray[saveIndex].textevent = $(this).siblings(".description").children(".future").val();
+    console.log(saveIndex);
+    console.log(dayArray[saveIndex].textevent);
     saveEvents();
     displayEvents();
-    
 })
