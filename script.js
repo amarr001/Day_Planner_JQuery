@@ -66,25 +66,25 @@ var dayArray = [
     
 ]
 
-// gets data for the header date
+// Displays date in the header 
 function titleDate() {
     var currentDate = moment().format('dddd, MMMM Do');
     $("#currentDay").text(currentDate);
 }
 
-// saves data to localStorage
+// Saves data to the local storage
 function saveEvents() {
     localStorage.setItem("dayArray", JSON.stringify(dayArray));
 }
 
-// sets any data in localStorage to the view
+// Sets the data entered, links its value to its id
 function displayEvents() {
     dayArray.forEach(function (eventDisplay) {
         $(`#${eventDisplay.id}`).val(eventDisplay.textevent);
     })
 }
 
-// sets any existing localStorage data to the view if it exists
+// Sets any data saved in the local storage to be displayed if it exists
 function init() {
     var recordedDay = JSON.parse(localStorage.getItem("dayArray"));
 
@@ -96,25 +96,25 @@ function init() {
     displayEvents();
 }
 
-// loads header date
+// Loads current date in the header
 titleDate();
 
-// creates the visuals for the scheduler body
+// Creates and append the visual aspects of the planner
 dayArray.forEach(function(hourDiv) {
-    // creates timeblocks row
+    // Time block rows
     var timeRow = $("<form>").attr({
         "class": "row"
     });
     $(".container").append(timeRow);
 
-    // creates time field
+    // Time spots
     var hourSpot = $("<div>")
         .text(`${hourDiv.hour}${hourDiv.meridiem}`)
         .attr({
             "class": "col-md-2 hour"
     });
 
-    // creates schdeduler data
+    // Text area where the user is going to add data
     var textDiv = $("<div>")
         .attr({
             "class": "col-md-9 description p-0"
@@ -136,7 +136,7 @@ dayArray.forEach(function(hourDiv) {
         })
     }
 
-    // creates save button
+    // Save button
     var saveBtn = $("<i class='far fa-save fa-lg'></i>")
     var saveEvent = $("<button>")
         .attr({
@@ -146,11 +146,11 @@ dayArray.forEach(function(hourDiv) {
     timeRow.append(hourSpot, textDiv, saveEvent);
 })
 
-// loads any existing localstorage data after components created
+// Loads existing local storage data
 init();
 
 
-// saves data to be used in localStorage
+// Saves the data to be stored in the local storage
 $(".saveBtn").on("click", function(event) {
     event.preventDefault();
     var saveIndex = $(this).siblings(".description").children(".future").attr("id");
