@@ -2,75 +2,75 @@
 
 var dayArray = [
     {
-        index: "0",
-        hour: "8",
-        time: "8",
+        id: "0",
+        hour: "08",
+        time: "08",
         meridiem: "am",
-        event: ""
+        reminder: ""
     },
     {
-        index: "1",
-        hour: "9",
-        time: "9",
+        id: "1",
+        hour: "09",
+        time: "09",
         meridiem: "am",
-        event: ""
+        reminder: ""
 
     },
     {
-        index: "2",
+        id: "2",
         hour: "10",
         time: "10",
         meridiem: "am",
-        event: ""
+        reminder: ""
     },
     {
-        index: "3",
+        id: "3",
         hour: "11",
         time: "11",
         meridiem: "am",
-        event: ""
+        reminder: ""
     },
     {
-        index: "4",
+        id: "4",
         hour: "12",
         time: "12",
         meridiem: "pm",
-        event: ""
+        reminder: ""
     },
     {
-        index: "5",
+        id: "5",
         hour: "1",
-        time: "1",
+        time: "13",
         meridiem: "pm",
-        event: ""
+        reminder: ""
     },
     {
-        index: "6",
+        id: "6",
         hour: "2",
-        time: "2",
+        time: "14",
         meridiem: "pm",
-        event: ""
+        reminder: ""
     },
     {
-        index: "7",
+        id: "7",
         hour: "3",
-        time: "3",
+        time: "15",
         meridiem: "pm",
-        event: ""
+        reminder: ""
     },
     {
-        index: "8",
+        id: "8",
         hour: "4",
-        time: "4",
+        time: "16",
         meridiem: "pm",
-        event: ""
+        reminder: ""
     },
     {
-        index: "9",
+        id: "9",
         hour: "5",
-        time: "5",
+        time: "17",
         meridiem: "pm",
-        event: ""
+        reminder: ""
 
     },
         
@@ -83,9 +83,33 @@ function titleDate(){
     $("#currentDay").text(titleDate);
 }
 
+// Saves event to localStorage
+function saveEvents() {
+    localStorage.setItem("dayArray", JSON.stringify(dayArray));
+}
+// Display data within localStorage
+function displayEvents() {
+    dayArray.forEach(function (eventDisplay) {
+        $(`#${eventDisplay.id}`).val(eventDisplay.reminder);
+
+    })
+}
+
+// sets any existing localStorage data to the view if it exists
+function init() {
+    var recordedDay = JSON.parse(localStorage.getItem("dayArray"));
+
+    if (recordedDay) {
+
+        dayArray = recordedDay;
+    }
+
+    saveEvents();
+    displayEvents();
+}
+
 //Header date
 titleDate();
-
 
 //Added elements in the body, loup
 
@@ -109,32 +133,48 @@ dayArray.forEach(function(hourBody){
 
 //Textarea
 
-var textArea = $("<div>").attr({"class": "col-md-8 description p-0"});
-var event = $("<textarea>");
-textArea.append(event);
-event.attr("index", hourBody.index);
+var textAreaDiv = $("<div>").attr({"class": "col-md-8 description p-0"});
+var textArea = $("<textarea>");
+textAreaDiv.append(textArea);
+textArea.attr("id", hourBody.id);
 
 if(hourBody.time < moment().format("HH")){
-    event.attr({
+    textArea.attr({
         "class": "past"
-    });
-}else if(hourBody === moment().format("HH")){
-    event.attr({
+    })
+}else if(hourBody.time === moment().format("HH")){
+    textArea.attr({
         "class": "present"
-    });
-}else if (hourBody > moment().format("HH")){
-    event.attr({
+    })
+}else if (hourBody.time > moment().format("HH")){
+    textArea.attr({
         "class": "future"
-    });
+    })
 }
 
 //Creates button
 
-var saveBtn = $("<i class='far fa-save fa-lg'></i>");
+var saveBtn = $("<i class='far fa-save fa-lg'></i>")
 var saveEvent = $("<button>").attr({"class": "col-md-1 saveBtn"});
+
 saveEvent.append(saveBtn);
+timeRow.append(hourSquare, textAreaDiv, saveEvent);
 
-timeRow.append(hourSquare, textArea, saveEvent);
+})
 
-  
-});
+init();
+
+// Saves events into localStorage
+
+$(".saveBtn").on("click", function(event) {
+    event.preventDefault();
+    var saveIndex = $(this).siblings(".description").children(".future").attr("id");
+    dayArray[saveIndex].reminder = $(this).siblings(".description").children(".future").val();
+    
+   console.log(saveIndex);
+  console.log(dayArray[saveIndex].reminder);
+   
+    saveEvents();
+    displayEvents();
+    
+})
