@@ -153,8 +153,8 @@ init();
 // Saves the data to be stored in the local storage
 $(".saveBtn").on("click", function(event) {
     event.preventDefault();
-    var saveIndex = $(this).siblings(".description").children(".future").attr("id");
-    dayArray[saveIndex].textevent = $(this).siblings(".description").children(".future").val();
+    var saveIndex = $(this).siblings(".description").children().css(".present", ".past", "future").attr("id");
+    dayArray[saveIndex].textevent = $(this).siblings(".description").children().css(".present", ".past", "future").val();
     console.log(saveIndex);
     console.log(dayArray[saveIndex].textevent);
     saveEvents();
