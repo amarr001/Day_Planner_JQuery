@@ -1,11 +1,20 @@
 
 var dayArray = [
+
+    {
+        id: "0",
+        hour: "8",
+        time: "08",
+        meridiem: "am",
+        textevent: "" 
+
+    },
     {
         id: "0",
         hour: "9",
         time: "09",
         meridiem: "am",
-        textevent: ""
+        textevent: "" 
     },
     {
         id: "1",
@@ -66,62 +75,44 @@ var dayArray = [
     
 ]
 
-// Displays date in the header 
+// Displays current date in the header 
 function titleDate() {
     var currentDate = moment().format('dddd, MMMM Do');
     $("#currentDay").text(currentDate);
 }
 
-// Saves data to the local storage
-function saveEvents() {
-    localStorage.setItem("dayArray", JSON.stringify(dayArray));
-}
-
-// Sets the data entered, links its value to its id
-function displayEvents() {
-    dayArray.forEach(function (eventDisplay) {
-        $(`#${eventDisplay.id}`).val(eventDisplay.textevent);
-    })
-}
-
-// Sets any data saved in the local storage to be displayed if it exists
-function init() {
-    var recordedDay = JSON.parse(localStorage.getItem("dayArray"));
-
-    if (recordedDay) {
-        dayArray = recordedDay;
-    }
-
-    saveEvents();
-    displayEvents();
-}
-
 // Loads current date in the header
 titleDate();
+
 
 // Creates and append the visual aspects of the planner
 dayArray.forEach(function(hourDiv) {
     // Time block rows
-    var timeRow = $("<form>").attr({
+    var timeRow = 
+    
+    $("<form>").attr({
         "class": "row"
     });
     $(".container").append(timeRow);
 
     // Time spots
-    var hourSpot = $("<div>")
+    var hourSpot = 
+    
+    $("<div>")
         .text(`${hourDiv.hour}${hourDiv.meridiem}`)
         .attr({
-            "class": "col-md-2 hour"
+            "class": "col-md-1 hour"
     });
 
     // Text area where the user is going to add data
     var textDiv = $("<div>")
         .attr({
-            "class": "col-md-9 description p-0"
+            "class": "col-md-8 description"
         });
     var textArea = $("<textarea>");
     textDiv.append(textArea);
     textArea.attr("id", hourDiv.id);
+    
     if (hourDiv.time < moment().format("HH")) {
         textArea.attr ({
             "class": "past", 
@@ -146,17 +137,40 @@ dayArray.forEach(function(hourDiv) {
     timeRow.append(hourSpot, textDiv, saveEvent);
 })
 
-// Loads existing local storage data
-init();
-
-
 // Saves the data to be stored in the local storage
 $(".saveBtn").on("click", function(event) {
     event.preventDefault();
     var saveIndex = $(this).siblings(".description").children().css(".present", ".past", "future").attr("id");
     dayArray[saveIndex].textevent = $(this).siblings(".description").children().css(".present", ".past", "future").val();
-    console.log(saveIndex);
+    
     console.log(dayArray[saveIndex].textevent);
     saveEvents();
     displayEvents();
 })
+
+// Local storage
+function saveEvents() {
+    localStorage.setItem("dayArray", JSON.stringify(dayArray));
+}
+
+// Sets the data entered, links its value to its id
+function displayEvents() {
+    dayArray.forEach(function (eventDisplay) {
+        $(`#${eventDisplay.id}`).val(eventDisplay.textevent);
+    })
+}
+
+// Sets any data saved in the local storage to be displayed
+function initialPage() {
+    var recordedDay = JSON.parse(localStorage.getItem("dayArray"));
+
+    if (recordedDay) {
+        dayArray = recordedDay;
+    }
+
+    saveEvents();
+    displayEvents();
+}
+
+// Loads existing local storage data
+initialPage();
