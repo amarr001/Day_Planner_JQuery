@@ -7,7 +7,7 @@ Using the forEach method and louping through the array, the timeblock rows and o
 Local Storage: functions were created in order to save, display and load existing data. 
 saveEvents(); - Saves any data, entered by the user in the form of a string, to the local storage.
 displayEvents(); - Sets the data entered and links it to its id.
-init(); - Sets any data saved in the local storage to be displayed if it exists
+initialPage(); - Sets any data saved in the local storage to be displayed if it exists
 
 Save Buttons: a click method was applied to the save button in order to save data entered in the local storage. 
 
